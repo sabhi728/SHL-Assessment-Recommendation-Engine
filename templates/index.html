@@ -524,7 +524,7 @@
 
             try {
                 console.log('Making request with keyword:', keyword);
-                const response = await fetch('http://localhost:10000/recommend', {
+                const response = await fetch('/recommend', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -566,7 +566,7 @@
 
             try {
                 console.log('Making request with filters:', { jobFamily, jobLevel, industry, language });
-                const response = await fetch('http://localhost:10000/recommend', {
+                const response = await fetch('/recommend', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -604,7 +604,7 @@
 
             try {
                 console.log('Making request with job category:', jobCategory);
-                const response = await fetch('http://localhost:10000/recommend', {
+                const response = await fetch('/recommend', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
