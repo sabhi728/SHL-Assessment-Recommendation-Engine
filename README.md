@@ -19,8 +19,6 @@
 - [📁 Project Structure](#-project-structure)
 - [🔧 Setup Guide](#-setup-guide)
 - [📚 API Documentation](#-api-documentation)
-- [🤝 Contributing](#-contributing)
-- [📄 License](#-license)
 
 ## ✨ Features
 
@@ -115,22 +113,8 @@ shl-recommendation-engine/
 
 For detailed API documentation, visit: `http://localhost:8000/docs`
 
-## 🤝 Contributing
-
-We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.md) for details.
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
 ---
 
 <div align="center">
-  <sub>Built with ❤️ by the SHL Team</sub>
+  <sub>Built with ❤️ by the Abhishek sharma</sub>
 </div>
