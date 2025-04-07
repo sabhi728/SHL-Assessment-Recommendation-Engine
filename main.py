@@ -92,7 +92,16 @@ except Exception as e:
     }
     PRODUCTS = []
 
-API_PORT = int(os.getenv("API_PORT", "8000"))
+API_PORT = int(os.getenv("PORT", "10000"))  # Changed from API_PORT to PORT for Render compatibility
+
+# Add server configuration
+SERVER_CONFIG = {
+    "host": "0.0.0.0",
+    "port": API_PORT,
+    "reload": False,  # Disable reload in production
+    "workers": 1,
+    "log_level": "info"
+}
 
 class RecommendationRequest(BaseModel):
     job_role: str
@@ -192,4 +201,22 @@ async def api_test():
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000) 
+    try:
+        logger.info(f"Starting server on {SERVER_CONFIG['host']}:{SERVER_CONFIG['port']}")
+        logger.info(f"Environment: {os.getenv('ENVIRONMENT', 'production')}")
+        logger.info(f"Products loaded: {len(PRODUCTS)}")
+        logger.info(f"Model config loaded: {MODEL_CONFIG is not None}")
+        
+        # Use the app directly instead of the module string for Render
+        uvicorn.run(
+            app,
+            host=SERVER_CONFIG["host"],
+            port=SERVER_CONFIG["port"],
+            reload=SERVER_CONFIG["reload"],
+            workers=SERVER_CONFIG["workers"],
+            log_level=SERVER_CONFIG["log_level"]
+        )
+    except Exception as e:
+        logger.error(f"Failed to start server: {str(e)}")
+        logger.error(f"Traceback: {traceback.format_exc()}")
+        raise 
