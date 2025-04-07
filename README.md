@@ -1,16 +1,6 @@
 # 🚀 SHL Assessment Recommendation Engine
 
-<div align="center">
-  <img src="https://img.shields.io/badge/Python-3.9-blue.svg" alt="Python Version">
-  <img src="https://img.shields.io/badge/FastAPI-0.68.0-green.svg" alt="FastAPI Version">
-  <img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License">
-</div>
-
 <br>
-
-<div align="center">
-  <img src="https://via.placeholder.com/800x400?text=SHL+Recommendation+Engine" alt="SHL Recommendation Engine Preview">
-</div>
 
 ## 📋 Table of Contents
 - [✨ Features](#-features)
