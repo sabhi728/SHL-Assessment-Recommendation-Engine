@@ -28,9 +28,9 @@ app = FastAPI(title="SHL Assessment Recommendation Engine")
 # Configure CORS with more detailed settings
 origins = [
     "http://localhost",
-    "http://localhost:8080",
+    "http://localhost:8000",
     "http://127.0.0.1",
-    "http://127.0.0.1:8080",
+    "http://127.0.0.1:8000",
     "https://*.onrender.com",  # Allow Render deployments
     "*"  # Allow all origins for testing
 ]
@@ -91,6 +91,8 @@ except Exception as e:
         }
     }
     PRODUCTS = []
+
+API_PORT = int(os.getenv("API_PORT", "8000"))
 
 class RecommendationRequest(BaseModel):
     job_role: str
@@ -190,4 +192,4 @@ async def api_test():
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="127.0.0.1", port=8000) 
+    uvicorn.run(app, host="0.0.0.0", port=8000) 
