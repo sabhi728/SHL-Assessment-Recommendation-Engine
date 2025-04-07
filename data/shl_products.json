@@ -1,0 +1,68 @@
+{
+    "products": [
+        {
+            "id": "OPQ32",
+            "name": "Occupational Personality Questionnaire (OPQ32)",
+            "description": "A comprehensive personality assessment that measures 32 characteristics that influence work performance.",
+            "categories": ["Personality", "Leadership", "Management"],
+            "suitable_roles": ["Manager", "Executive", "Team Leader"],
+            "experience_levels": ["mid", "senior", "executive"]
+        },
+        {
+            "id": "VERIFY",
+            "name": "Verify Cognitive Ability Tests",
+            "description": "A suite of aptitude tests measuring numerical, verbal, and logical reasoning abilities.",
+            "categories": ["Cognitive Ability", "Problem Solving"],
+            "suitable_roles": ["Analyst", "Software Engineer", "Consultant"],
+            "experience_levels": ["entry", "mid", "senior"]
+        },
+        {
+            "id": "MQ",
+            "name": "Motivation Questionnaire",
+            "description": "Assesses 18 dimensions of motivation to understand what drives and engages individuals at work.",
+            "categories": ["Motivation", "Engagement"],
+            "suitable_roles": ["Sales Manager", "HR Manager", "Customer Service"],
+            "experience_levels": ["mid", "senior"]
+        },
+        {
+            "id": "WAVE",
+            "name": "Wave Professional Styles",
+            "description": "Measures work styles, preferences, and motives across 36 dimensions.",
+            "categories": ["Work Style", "Personality", "Leadership"],
+            "suitable_roles": ["Professional", "Manager", "Executive"],
+            "experience_levels": ["mid", "senior", "executive"]
+        },
+        {
+            "id": "SALESASSESS",
+            "name": "Sales Assessment",
+            "description": "Specifically designed to evaluate sales capabilities and potential.",
+            "categories": ["Sales", "Customer Focus"],
+            "suitable_roles": ["Sales Representative", "Account Manager", "Sales Director"],
+            "experience_levels": ["entry", "mid", "senior"]
+        },
+        {
+            "id": "CODING",
+            "name": "Coding Assessment",
+            "description": "Technical assessment for software development roles, measuring coding ability and problem-solving.",
+            "categories": ["Technical Skills", "Problem Solving"],
+            "suitable_roles": ["Software Engineer", "Developer", "Technical Lead"],
+            "experience_levels": ["entry", "mid", "senior"]
+        },
+        {
+            "id": "FINANCE",
+            "name": "Financial Acumen Assessment",
+            "description": "Evaluates understanding of financial concepts and decision-making abilities.",
+            "categories": ["Financial Skills", "Analysis"],
+            "suitable_roles": ["Financial Analyst", "Accountant", "Finance Manager"],
+            "experience_levels": ["entry", "mid", "senior"]
+        },
+        {
+            "id": "REMOTE",
+            "name": "Remote Working Assessment",
+            "description": "Assesses capabilities and working style suited for remote work environments.",
+            "categories": ["Work Style", "Communication"],
+            "suitable_roles": ["Remote Worker", "Virtual Team Leader"],
+            "experience_levels": ["entry", "mid", "senior"]
+        }
+    ]
+} 

@@ -1,0 +1,66 @@
+.navbar {
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.card {
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    border: none;
+}
+
+.card-header {
+    background-color: #f8f9fa;
+    border-bottom: none;
+}
+
+.form-label {
+    font-weight: 500;
+}
+
+.btn-primary {
+    background-color: #0056b3;
+    border-color: #0056b3;
+}
+
+.btn-primary:hover {
+    background-color: #004494;
+    border-color: #004494;
+}
+
+.list-group-item {
+    margin-bottom: 0.5rem;
+    border-radius: 0.25rem !important;
+}
+
+.confidence-score {
+    font-size: 0.9rem;
+    color: #6c757d;
+}
+
+.assessment-type {
+    font-size: 0.85rem;
+    color: #28a745;
+    font-weight: 500;
+}
+
+.assessment-duration {
+    font-size: 0.85rem;
+    color: #6c757d;
+}
+
+.match-details {
+    font-size: 0.8rem;
+    color: #495057;
+    margin-top: 0.5rem;
+}
+
+.loading {
+    display: none;
+    text-align: center;
+    margin: 2rem 0;
+}
+
+.loading-spinner {
+    width: 3rem;
+    height: 3rem;
+} 

@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SHL Assessment Recommendation Engine</title>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #0088cc;
+            --secondary-color: #4a9d3d;
+            --text-color: #333;
+            --border-color: #ddd;
+            --background-gray: #f5f5f5;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: #fff;
+        }
+
+        .header {
+            background-color: #fff;
+            padding: 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .logo {
+            max-width: 120px;
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 600;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .search-section {
+            background-color: var(--background-gray);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border-radius: 4px;
+        }
+
+        .search-section h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--text-color);
+        }
+
+        .search-box {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .search-button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.2s;
+        }
+
+        .search-button:hover {
+            background-color: #006699;
+        }
+
+        .filters {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .filter-label {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
+        }
+
+        .filter-select {
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 1rem;
+            background-color: white;
+        }
+
+        .book-demo {
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 0.75rem 2rem;
+            border: none;
+            border-radius: 4px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .book-demo:hover {
+            background-color: #3a7d2d;
+        }
+
+        @media (max-width: 768px) {
+            .filters {
+                grid-template-columns: 1fr;
+            }
+            
+            .search-box {
+                flex-direction: column;
+            }
+            
+            .search-button {
+                width: 100%;
+            }
+        }
+
+        /* Enhanced styles for results section */
+        .results-section {
+            margin-top: 2rem;
+            display: none;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            padding: 2rem;
+        }
+
+        .results-section.visible {
+            display: block;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--background-gray);
+        }
+
+        .results-header h2 {
+            font-size: 1.8rem;
+            color: var(--primary-color);
+        }
+
+        .results-count {
+            background: var(--primary-color);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .result-card {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .result-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+        }
+
+        .result-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--primary-color);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .result-card:hover::before {
+            opacity: 1;
+        }
+
+        .result-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-color);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .result-title::after {
+            content: '→';
+            opacity: 0;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
+        .result-card:hover .result-title::after {
+            opacity: 1;
+            transform: translateX(5px);
+        }
+
+        .result-description {
+            font-size: 0.95rem;
+            color: #555;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .result-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .result-tag {
+            background: var(--background-gray);
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            color: var(--text-color);
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .result-tag:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .match-details {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 1.25rem;
+            margin-top: 1.5rem;
+        }
+
+        .match-score {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .score-label {
+            font-size: 0.9rem;
+            color: #555;
+            flex: 1;
+            font-weight: 500;
+        }
+
+        .score-value {
+            font-weight: 600;
+            color: var(--primary-color);
+            font-size: 1rem;
+            min-width: 3.5rem;
+            text-align: right;
+        }
+
+        .progress-bar {
+            height: 6px;
+            background: #e9ecef;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 0.5rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-color), #00a0e9);
+            transition: width 0.5s ease;
+            border-radius: 3px;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 3rem;
+            background: var(--background-gray);
+            border-radius: 12px;
+            color: #666;
+        }
+
+        .no-results h3 {
+            font-size: 1.5rem;
+            color: var(--text-color);
+            margin-bottom: 1rem;
+        }
+
+        .no-results p {
+            font-size: 1.1rem;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+
+    <main class="container">
+        <section class="search-section">
+            <h2>Search by keyword...</h2>
+            <div class="search-box">
+                <input type="text" class="search-input" placeholder="Search by keyword..." id="keyword-search">
+                <button class="search-button" onclick="searchByKeyword()">Search</button>
+            </div>
+        </section>
+
+        <section class="search-section">
+            <h2>Search by choosing one or more...</h2>
+            <div class="filters">
+                <div class="filter-group">
+                    <label class="filter-label">Job Family</label>
+                    <select class="filter-select" id="job-family">
+                        <option value="">Select...</option>
+                        <option value="sales">Sales</option>
+                        <option value="technology">Technology</option>
+                        <option value="finance">Finance</option>
+                        <option value="hr">Human Resources</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label class="filter-label">Job Level</label>
+                    <select class="filter-select" id="job-level">
+                        <option value="">Select...</option>
+                        <option value="entry">Entry Level</option>
+                        <option value="mid">Mid Level</option>
+                        <option value="senior">Senior Level</option>
+                        <option value="executive">Executive</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label class="filter-label">Industry</label>
+                    <select class="filter-select" id="industry">
+                        <option value="">Select...</option>
+                        <option value="technology">Technology</option>
+                        <option value="finance">Finance</option>
+                        <option value="healthcare">Healthcare</option>
+                        <option value="retail">Retail</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label class="filter-label">Language</label>
+                    <select class="filter-select" id="language">
+                        <option value="">Select...</option>
+                        <option value="en">English</option>
+                        <option value="es">Spanish</option>
+                        <option value="fr">French</option>
+                        <option value="de">German</option>
+                    </select>
+                </div>
+            </div>
+            <button class="search-button" onclick="searchByFilters()">Search</button>
+        </section>
+
+        <section class="search-section">
+            <h2>Search by job title...</h2>
+            <div class="filter-group">
+                <label class="filter-label">Job Category</label>
+                <select class="filter-select" id="job-category">
+                    <option value="">Select...</option>
+                    <option value="software-engineer">Software Engineer</option>
+                    <option value="sales-manager">Sales Manager</option>
+                    <option value="hr-manager">HR Manager</option>
+                    <option value="finance-analyst">Financial Analyst</option>
+                </select>
+            </div>
+            <button class="search-button" style="margin-top: 1rem;" onclick="searchByJobTitle()">Search</button>
+        </section>
+    </main>
+
+    <!-- Add results section -->
+    <div class="results-section" id="results-section">
+        <div class="results-header">
+            <h2>Search Results</h2>
+            <span class="results-count" id="results-count"></span>
+        </div>
+        <div class="results-grid" id="results-grid">
+            <!-- Results will be inserted here -->
+        </div>
+    </div>
+
+    <script>
+        function displayResults(data) {
+            const resultsSection = document.getElementById('results-section');
+            const resultsGrid = document.getElementById('results-grid');
+            const resultsCount = document.getElementById('results-count');
+            
+            // Clear previous results
+            resultsGrid.innerHTML = '';
+            
+            if (!data.recommended_products || data.recommended_products.length === 0) {
+                resultsGrid.innerHTML = `
+                    <div class="no-results">
+                        <h3>No matching assessments found</h3>
+                        <p>Try adjusting your search criteria or using different keywords</p>
+                    </div>
+                `;
+                resultsCount.textContent = '0 results';
+            } else {
+                resultsCount.textContent = `${data.recommended_products.length} matches found`;
+                
+                data.recommended_products.forEach((product, index) => {
+                    const confidence = data.confidence_scores[index];
+                    const card = document.createElement('div');
+                    card.className = 'result-card';
+                    
+                    // Calculate color based on confidence score
+                    const getScoreColor = (score) => {
+                        if (score >= 0.8) return '#2ecc71';
+                        if (score >= 0.6) return '#3498db';
+                        if (score >= 0.4) return '#f1c40f';
+                        return '#e74c3c';
+                    };
+
+                    card.innerHTML = `
+                        <div class="result-title">${product.name}</div>
+                        <div class="result-description">${product.description}</div>
+                        <div class="result-meta">
+                            ${product.categories.map(cat => 
+                                `<span class="result-tag">${cat}</span>`
+                            ).join('')}
+                        </div>
+                        <div class="match-details">
+                            <div class="match-score">
+                                <span class="score-label">Overall Match</span>
+                                <div style="flex: 2">
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem">
+                                        <span style="font-size: 0.85rem; color: ${getScoreColor(confidence)}">
+                                            ${confidence >= 0.8 ? 'Excellent' : 
+                                              confidence >= 0.6 ? 'Good' :
+                                              confidence >= 0.4 ? 'Fair' : 'Low'} Match
+                                        </span>
+                                        <span class="score-value">${Math.round(confidence * 100)}%</span>
+                                    </div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: ${confidence * 100}%; background: ${getScoreColor(confidence)}"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    
+                    resultsGrid.appendChild(card);
+                });
+            }
+            
+            resultsSection.classList.remove('visible');
+            setTimeout(() => {
+                resultsSection.classList.add('visible');
+                resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 10);
+        }
+
+        async function searchByKeyword() {
+            const keyword = document.getElementById('keyword-search').value.trim();
+            if (!keyword) {
+                alert('Please enter a search keyword');
+                return;
+            }
+
+            try {
+                console.log('Making request with keyword:', keyword);
+                const response = await fetch('http://localhost:8080/recommend', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        job_role: keyword,
+                        assessment_needs: [keyword],
+                        experience_level: null
+                    })
+                });
+                
+                console.log('Response status:', response.status);
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('Error response:', errorText);
+                    throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+                }
+                
+                const data = await response.json();
+                console.log('Response data:', data);
+                displayResults(data);
+            } catch (error) {
+                console.error('Error details:', error);
+                alert('An error occurred while searching. Please check the console for details.');
+            }
+        }
+
+        async function searchByFilters() {
+            const jobFamily = document.getElementById('job-family').value;
+            const jobLevel = document.getElementById('job-level').value;
+            const industry = document.getElementById('industry').value;
+            const language = document.getElementById('language').value;
+
+            if (!jobFamily && !jobLevel && !industry && !language) {
+                alert('Please select at least one filter');
+                return;
+            }
+
+            try {
+                console.log('Making request with filters:', { jobFamily, jobLevel, industry, language });
+                const response = await fetch('http://localhost:8080/recommend', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        job_role: jobFamily || 'General',
+                        assessment_needs: [jobLevel, industry].filter(Boolean),
+                        experience_level: jobLevel
+                    })
+                });
+                
+                console.log('Response status:', response.status);
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('Error response:', errorText);
+                    throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+                }
+                
+                const data = await response.json();
+                console.log('Response data:', data);
+                displayResults(data);
+            } catch (error) {
+                console.error('Error details:', error);
+                alert('An error occurred while searching. Please check the console for details.');
+            }
+        }
+
+        async function searchByJobTitle() {
+            const jobCategory = document.getElementById('job-category').value;
+            if (!jobCategory) {
+                alert('Please select a job category');
+                return;
+            }
+
+            try {
+                console.log('Making request with job category:', jobCategory);
+                const response = await fetch('http://localhost:8080/recommend', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        job_role: jobCategory,
+                        assessment_needs: [jobCategory],
+                        experience_level: 'mid'
+                    })
+                });
+                
+                console.log('Response status:', response.status);
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('Error response:', errorText);
+                    throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+                }
+                
+                const data = await response.json();
+                console.log('Response data:', data);
+                displayResults(data);
+            } catch (error) {
+                console.error('Error details:', error);
+                alert('An error occurred while searching. Please check the console for details.');
+            }
+        }
+    </script>
+</body>
+</html> 
