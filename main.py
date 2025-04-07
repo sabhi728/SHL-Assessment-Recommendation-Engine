@@ -22,8 +22,17 @@ logger = logging.getLogger(__name__)
 # Load environment variables
 load_dotenv()
 
+# Get environment variables with defaults
+ENVIRONMENT = os.getenv("ENVIRONMENT", "production")
+PORT = int(os.getenv("PORT", "10000"))
+HOST = "0.0.0.0"
+
 # Create FastAPI app
-app = FastAPI(title="SHL Assessment Recommendation Engine")
+app = FastAPI(
+    title="SHL Assessment Recommendation Engine",
+    docs_url="/docs" if ENVIRONMENT == "development" else None,
+    redoc_url="/redoc" if ENVIRONMENT == "development" else None
+)
 
 # Configure CORS with more detailed settings
 origins = [
@@ -70,6 +79,7 @@ try:
         logger.debug(f"Loaded {len(PRODUCTS)} products")
 except Exception as e:
     logger.error(f"Error loading configuration files: {str(e)}")
+    logger.error(f"Traceback: {traceback.format_exc()}")
     MODEL_CONFIG = {
         "model_settings": {
             "transformer_model": "sentence-transformers/all-MiniLM-L6-v2",
@@ -92,13 +102,11 @@ except Exception as e:
     }
     PRODUCTS = []
 
-API_PORT = int(os.getenv("PORT", "10000"))  # Changed from API_PORT to PORT for Render compatibility
-
 # Add server configuration
 SERVER_CONFIG = {
-    "host": "0.0.0.0",
-    "port": API_PORT,
-    "reload": False,  # Disable reload in production
+    "host": HOST,
+    "port": PORT,
+    "reload": ENVIRONMENT == "development",
     "workers": 1,
     "log_level": "info"
 }
@@ -202,16 +210,15 @@ async def api_test():
 if __name__ == "__main__":
     import uvicorn
     try:
-        logger.info(f"Starting server on {SERVER_CONFIG['host']}:{SERVER_CONFIG['port']}")
-        logger.info(f"Environment: {os.getenv('ENVIRONMENT', 'production')}")
+        logger.info(f"Starting server in {ENVIRONMENT} mode")
+        logger.info(f"Server will run on {HOST}:{PORT}")
         logger.info(f"Products loaded: {len(PRODUCTS)}")
         logger.info(f"Model config loaded: {MODEL_CONFIG is not None}")
         
-        # Use the app directly instead of the module string for Render
         uvicorn.run(
             app,
-            host=SERVER_CONFIG["host"],
-            port=SERVER_CONFIG["port"],
+            host=HOST,
+            port=PORT,
             reload=SERVER_CONFIG["reload"],
             workers=SERVER_CONFIG["workers"],
             log_level=SERVER_CONFIG["log_level"]
