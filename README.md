@@ -1,183 +1,136 @@
-# SHL Assessment Recommendation Engine
+# 🚀 SHL Assessment Recommendation Engine
 
-This project implements a recommendation engine for SHL assessments using machine learning and AI techniques. The engine provides an intuitive web interface for users to input their requirements and receive personalized SHL product recommendations.
+<div align="center">
+  <img src="https://img.shields.io/badge/Python-3.9-blue.svg" alt="Python Version">
+  <img src="https://img.shields.io/badge/FastAPI-0.68.0-green.svg" alt="FastAPI Version">
+  <img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License">
+</div>
 
-## Technology Stack
+<br>
+
+<div align="center">
+  <img src="https://via.placeholder.com/800x400?text=SHL+Recommendation+Engine" alt="SHL Recommendation Engine Preview">
+</div>
+
+## 📋 Table of Contents
+- [✨ Features](#-features)
+- [🛠️ Technology Stack](#️-technology-stack)
+- [🚀 Quick Start](#-quick-start)
+- [📁 Project Structure](#-project-structure)
+- [🔧 Setup Guide](#-setup-guide)
+- [📚 API Documentation](#-api-documentation)
+- [🤝 Contributing](#-contributing)
+- [📄 License](#-license)
+
+## ✨ Features
+
+### 🎯 Core Features
+- 🤖 AI-powered product recommendations
+- 📊 Real-time requirement analysis
+- 🔍 Intelligent matching algorithm
+- 🔄 REST API integration
+- ⚙️ Customizable parameters
+
+### 🎨 Interactive UI
+- 📱 Responsive design
+- ⚡ Real-time updates
+- 🎯 User-friendly forms
+- 📈 Visual dashboards
+- 🎮 Interactive elements
+
+## 🛠️ Technology Stack
 
 ### Frontend
-- **Framework**: FastAPI with Jinja2 templating
-- **Styling**: 
-  - Tailwind CSS for responsive design
-  - Custom CSS for unique components
-  - Font Awesome for icons
-- **JavaScript**:
-  - Alpine.js for reactive components
-  - Chart.js for data visualization
-  - Axios for API communication
-- **UI Components**:
-  - Custom form elements
-  - Interactive data tables
-  - Modal dialogs
-  - Toast notifications
-  - Progress indicators
+<div align="center">
+  <img src="https://img.shields.io/badge/FastAPI-0.68.0-green.svg" alt="FastAPI">
+  <img src="https://img.shields.io/badge/Tailwind_CSS-3.0-blue.svg" alt="Tailwind CSS">
+  <img src="https://img.shields.io/badge/Alpine.js-3.0-purple.svg" alt="Alpine.js">
+  <img src="https://img.shields.io/badge/Chart.js-3.0-red.svg" alt="Chart.js">
+</div>
 
 ### Backend
-- **Framework**: FastAPI
-- **Machine Learning**:
-  - Scikit-learn for recommendation algorithms
-  - Natural Language Processing (NLP) for requirement analysis
-- **Database**: SQLite for development, PostgreSQL for production
-- **API**: RESTful endpoints with OpenAPI documentation
+<div align="center">
+  <img src="https://img.shields.io/badge/Python-3.9-blue.svg" alt="Python">
+  <img src="https://img.shields.io/badge/Scikit_learn-1.0-orange.svg" alt="Scikit-learn">
+  <img src="https://img.shields.io/badge/PostgreSQL-13.0-blue.svg" alt="PostgreSQL">
+</div>
 
-## Features
+## 🚀 Quick Start
 
-### Core Features
-- Product recommendation based on user requirements
-- Natural language processing for understanding assessment needs
-- Machine learning-based matching algorithm
-- REST API interface for easy integration
-- Configurable recommendation parameters
-
-### Interactive UI Features
-- Modern, responsive web interface
-- Real-time recommendation updates
-- Interactive requirement input form
-- Visual product comparison dashboard
-- Detailed product information cards
-- User-friendly navigation
-- Mobile-responsive design
-- Loading indicators and feedback
-- Error handling with user-friendly messages
-
-### UI/UX Enhancements
-- **Accessibility Features**:
-  - ARIA labels for screen readers
-  - Keyboard navigation support
-  - High contrast mode
-  - Responsive font sizing
-- **User Experience**:
-  - Guided onboarding process
-  - Interactive tutorials
-  - Contextual help tooltips
-  - Smooth page transitions
-  - Progressive loading
-- **Visual Design**:
-  - Consistent color scheme
-  - Modern typography
-  - Micro-interactions
-  - Loading skeletons
-  - Animated transitions
-- **Feedback Mechanisms**:
-  - Success/error notifications
-  - Form validation messages
-  - Progress indicators
-  - Confirmation dialogs
-  - Undo/redo functionality
-
-## Setup
-
-1. Create a virtual environment:
 ```bash
+# Clone the repository
+git clone https://github.com/yourusername/shl-recommendation-engine.git
+cd shl-recommendation-engine
+
+# Create and activate virtual environment
 python -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
-```
 
-2. Install dependencies:
-```bash
+# Install dependencies
 pip install -r requirements.txt
-```
 
-3. Create a `.env` file with your configuration:
-```
-SHL_API_KEY=your_api_key
-MODEL_PATH=models/
-DATA_PATH=data/
-```
-
-4. Run the application:
-```bash
+# Run the application
 uvicorn main:app --reload
 ```
 
-## Project Structure
+## 📁 Project Structure
+```
+shl-recommendation-engine/
+├── main.py              # Main application
+├── run_server.py        # Server configuration
+├── config.py            # Configuration settings
+├── requirements.txt     # Project dependencies
+├── templates/           # HTML templates
+├── static/             # Static assets
+├── models/             # ML models
+└── data/               # Data files
+```
 
-- `main.py`: Main application and API endpoints
-- `recommender/`: Core recommendation engine
-- `data/`: SHL product catalog data
-- `models/`: Trained ML models
-- `config.py`: Configuration settings
-- `requirements.txt`: Project dependencies
-- `templates/`: HTML templates
-  - `index.html`: Main application interface
-  - `test.html`: Testing interface
-- `static/`: Static assets
-  - `css/`: Stylesheets
-  - `js/`: JavaScript files
-  - `images/`: UI assets and icons
+## 🔧 Setup Guide
 
-## UI Components
+1. **Environment Setup**
+   ```bash
+   # Create .env file
+   cp .env.example .env
+   # Edit .env with your configuration
+   ```
 
-### Main Interface
-- **Requirement Input Form**
-  - Text input for assessment requirements
-  - Dropdown menus for specific criteria
-  - Checkboxes for additional options
-  - Submit button with loading state
-  - Auto-save functionality
-  - Form validation with visual feedback
+2. **Database Setup**
+   ```bash
+   # Initialize database
+   python scripts/init_db.py
+   ```
 
-- **Recommendation Display**
-  - Product cards with key information
-  - Visual comparison charts
-  - Detailed product descriptions
-  - Action buttons for each recommendation
-  - Filter and sort options
-  - Export functionality
+3. **Run Tests**
+   ```bash
+   pytest tests/
+   ```
 
-- **Navigation**
-  - Main menu with all sections
-  - Breadcrumb navigation
-  - Quick access buttons
-  - Search functionality
-  - Recent history
-  - Favorites/bookmarks
+## 📚 API Documentation
 
-### Interactive Features
-- Real-time form validation
-- Dynamic content loading
-- Smooth transitions and animations
-- Responsive layout adjustments
-- Error message displays
-- Success notifications
-- Loading spinners and progress indicators
-- Drag-and-drop functionality
-- Infinite scroll for long lists
-- Real-time search filtering
+### Available Endpoints
+- `POST /recommend` - Get assessment recommendations
+- `GET /products` - List available products
+- `GET /health` - Check service health
 
-## API Endpoints
+For detailed API documentation, visit: `http://localhost:8000/docs`
 
-- `POST /recommend`: Get assessment recommendations
-- `GET /products`: List available SHL products
-- `GET /health`: Check service health
+## 🤝 Contributing
 
-## Browser Support
-- Chrome (latest)
-- Firefox (latest)
-- Safari (latest)
-- Edge (latest)
+We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.md) for details.
 
-## Performance Optimization
-- Lazy loading of components
-- Image optimization
-- Code splitting
-- Caching strategies
-- Progressive Web App (PWA) support
-- Service worker implementation
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-## Contributing
+## 📄 License
 
-Please read CONTRIBUTING.md for details on our code of conduct and the process for submitting pull requests.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## License
+---
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+<div align="center">
+  <sub>Built with ❤️ by the SHL Team</sub>
+</div>
