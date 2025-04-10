@@ -1,7 +1,8 @@
 from fastapi import FastAPI, HTTPException, Request
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import List, Dict, Any, Optional
 import json
@@ -12,11 +13,13 @@ from pathlib import Path
 import os
 from dotenv import load_dotenv
 import traceback
+import sys
 
 # Configure logging
 logging.basicConfig(
     level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    stream=sys.stdout
 )
 logger = logging.getLogger(__name__)
 
@@ -30,17 +33,38 @@ app = FastAPI(
     version="1.0.0"
 )
 
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 # Mount static files and templates
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
-# Load the sentence transformer model
-try:
-    model = SentenceTransformer('all-MiniLM-L6-v2')
-    logger.info("Sentence transformer model loaded successfully")
-except Exception as e:
-    logger.error(f"Error loading sentence transformer model: {str(e)}")
-    raise
+# Global variables for model and assessments
+model = None
+assessments = []
+
+@app.on_event("startup")
+async def startup_event():
+    global model, assessments
+    try:
+        # Load the sentence transformer model
+        model = SentenceTransformer('all-MiniLM-L6-v2')
+        logger.info("Sentence transformer model loaded successfully")
+        
+        # Load assessments data
+        assessments = load_assessments()
+        logger.info(f"Loaded {len(assessments)} assessments successfully")
+    except Exception as e:
+        logger.error(f"Error during startup: {str(e)}")
+        logger.error(traceback.format_exc())
+        raise
 
 # Load assessments data
 def load_assessments():
@@ -59,8 +83,6 @@ def load_assessments():
     except Exception as e:
         logger.error(f"Error loading assessments: {str(e)}")
         return []
-
-assessments = load_assessments()
 
 class Filters(BaseModel):
     duration: Optional[int] = None
@@ -152,10 +174,19 @@ async def read_root(request: Request):
 
 @app.get("/health")
 async def health_check():
-    return {
-        "status": "healthy",
-        "assessments_loaded": len(assessments) > 0
-    }
+    try:
+        return {
+            "status": "healthy",
+            "assessments_loaded": len(assessments) > 0,
+            "model_loaded": model is not None,
+            "environment": os.getenv("ENVIRONMENT", "production")
+        }
+    except Exception as e:
+        logger.error(f"Health check failed: {str(e)}")
+        return {
+            "status": "unhealthy",
+            "error": str(e)
+        }
 
 @app.post("/recommend", response_model=RecommendationResponse)
 async def recommend(request: RecommendationRequest):
@@ -178,7 +209,10 @@ async def recommend(request: RecommendationRequest):
     except Exception as e:
         logger.error(f"Error in recommendation endpoint: {str(e)}")
         logger.error(traceback.format_exc())
-        raise HTTPException(status_code=500, detail=str(e))
+        return JSONResponse(
+            status_code=500,
+            content={"detail": str(e)}
+        )
 
 if __name__ == "__main__":
     import uvicorn
