@@ -3,7 +3,7 @@ from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
 import json
 import logging
 from sentence_transformers import SentenceTransformer
@@ -62,8 +62,15 @@ def load_assessments():
 
 assessments = load_assessments()
 
+class Filters(BaseModel):
+    duration: Optional[int] = None
+    adaptive_support: Optional[str] = None
+    remote_support: Optional[str] = None
+    test_type: Optional[List[str]] = None
+
 class RecommendationRequest(BaseModel):
     query: str
+    filters: Optional[Filters] = None
 
 class Assessment(BaseModel):
     url: str
@@ -72,6 +79,7 @@ class Assessment(BaseModel):
     duration: int
     remote_support: str
     test_type: List[str]
+    similarity_score: float
 
 class RecommendationResponse(BaseModel):
     recommended_assessments: List[Assessment]
@@ -88,25 +96,50 @@ def calculate_similarity(query: str, description: str) -> float:
         logger.error(f"Error calculating similarity: {str(e)}")
         return 0.0
 
-def get_recommendations(query: str) -> List[Dict]:
-    """Get recommendations based on query"""
+def get_recommendations(query: str, filters: Optional[Filters] = None) -> List[Dict]:
+    """Get recommendations based on query and filters"""
     try:
+        if not query or not query.strip():
+            raise ValueError("Query cannot be empty")
+
         # Calculate similarity scores for all assessments
         scored_assessments = []
         for assessment in assessments:
+            # Apply filters if provided
+            if filters:
+                # Duration filter
+                if filters.duration is not None and assessment['duration'] > filters.duration:
+                    continue
+                
+                # Adaptive support filter
+                if filters.adaptive_support and assessment['adaptive_support'] != filters.adaptive_support:
+                    continue
+                
+                # Remote support filter
+                if filters.remote_support and assessment['remote_support'] != filters.remote_support:
+                    continue
+                
+                # Test type filter - check if any of the selected test types match
+                if filters.test_type:
+                    assessment_test_types = [t.lower() for t in assessment['test_type']]
+                    selected_test_types = [t.lower() for t in filters.test_type]
+                    if not any(test_type in assessment_test_types for test_type in selected_test_types):
+                        continue
+
             # Calculate similarity score
             similarity_score = calculate_similarity(query, assessment["description"])
             
-            scored_assessments.append({
-                **assessment,
-                "similarity_score": similarity_score
-            })
+            # Only add assessments with positive similarity score
+            if similarity_score > 0:
+                scored_assessments.append({
+                    **assessment,
+                    "similarity_score": similarity_score
+                })
         
-        # Sort by score and return top 10
+        # Sort by score and return all matching results
         scored_assessments.sort(key=lambda x: x["similarity_score"], reverse=True)
-        top_assessments = scored_assessments[:10]
-        logger.info(f"Returning {len(top_assessments)} top recommendations")
-        return top_assessments
+        logger.info(f"Returning {len(scored_assessments)} recommendations")
+        return scored_assessments
     
     except Exception as e:
         logger.error(f"Error getting recommendations: {str(e)}")
@@ -120,21 +153,28 @@ async def read_root(request: Request):
 @app.get("/health")
 async def health_check():
     return {
-        "status": "healthy"
+        "status": "healthy",
+        "assessments_loaded": len(assessments) > 0
     }
 
 @app.post("/recommend", response_model=RecommendationResponse)
 async def recommend(request: RecommendationRequest):
     try:
+        if not request.query or not request.query.strip():
+            raise HTTPException(status_code=400, detail="Query cannot be empty")
+            
         logger.info(f"Received recommendation request with query: {request.query[:50]}...")
+        logger.info(f"Filters: {request.filters}")
         
-        recommendations = get_recommendations(request.query)
+        recommendations = get_recommendations(request.query, request.filters)
         logger.info(f"Returning {len(recommendations)} recommendations")
         
         if not recommendations:
-            raise HTTPException(status_code=404, detail="No recommendations found")
+            raise HTTPException(status_code=404, detail="No recommendations found matching your criteria")
         
         return RecommendationResponse(recommended_assessments=recommendations)
+    except HTTPException:
+        raise
     except Exception as e:
         logger.error(f"Error in recommendation endpoint: {str(e)}")
         logger.error(traceback.format_exc())
@@ -142,4 +182,5 @@ async def recommend(request: RecommendationRequest):
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000) 
+    port = int(os.getenv("PORT", 8000))
+    uvicorn.run(app, host="0.0.0.0", port=port) 

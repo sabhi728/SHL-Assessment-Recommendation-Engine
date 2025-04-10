@@ -283,11 +283,11 @@
                     <input type="checkbox" id="Personality & Behaviour" class="test-type-checkbox">
                     <label for="Personality & Behaviour" class="test-type-label">Personality & Behaviour</label>
                     
-                    <input type="checkbox" id="AI & ML" class="test-type-checkbox">
-                    <label for="AI & ML" class="test-type-label">AI & ML</label>
-                    
                     <input type="checkbox" id="Technical Skills" class="test-type-checkbox">
                     <label for="Technical Skills" class="test-type-label">Technical Skills</label>
+                    
+                    <input type="checkbox" id="AI & ML" class="test-type-checkbox">
+                    <label for="AI & ML" class="test-type-label">AI & ML</label>
                     
                     <input type="checkbox" id="API Development" class="test-type-checkbox">
                     <label for="API Development" class="test-type-label">API Development</label>
@@ -307,8 +307,26 @@
                     <input type="checkbox" id="DevOps" class="test-type-checkbox">
                     <label for="DevOps" class="test-type-label">DevOps</label>
                     
-                    <input type="checkbox" id="Cognitive Ability" class="test-type-checkbox">
-                    <label for="Cognitive Ability" class="test-type-label">Cognitive Ability</label>
+                    <input type="checkbox" id="NLP" class="test-type-checkbox">
+                    <label for="NLP" class="test-type-label">NLP</label>
+                    
+                    <input type="checkbox" id="Computer Vision" class="test-type-checkbox">
+                    <label for="Computer Vision" class="test-type-label">Computer Vision</label>
+                    
+                    <input type="checkbox" id="Microservices" class="test-type-checkbox">
+                    <label for="Microservices" class="test-type-label">Microservices</label>
+                    
+                    <input type="checkbox" id="AI Ethics" class="test-type-checkbox">
+                    <label for="AI Ethics" class="test-type-label">AI Ethics</label>
+                    
+                    <input type="checkbox" id="Compliance" class="test-type-checkbox">
+                    <label for="Compliance" class="test-type-label">Compliance</label>
+                    
+                    <input type="checkbox" id="MLOps" class="test-type-checkbox">
+                    <label for="MLOps" class="test-type-label">MLOps</label>
+                    
+                    <input type="checkbox" id="System Design" class="test-type-checkbox">
+                    <label for="System Design" class="test-type-label">System Design</label>
                 </div>
             </div>
 
@@ -356,7 +374,7 @@
 
                 // Prepare request data
                 const data = {
-                    query: queryInput.value,
+                    query: queryInput.value.trim(),
                     filters: filters
                 };
 
@@ -375,7 +393,8 @@
                     });
 
                     if (!response.ok) {
-                        throw new Error('Network response was not ok');
+                        const errorData = await response.json();
+                        throw new Error(errorData.detail || 'Failed to get recommendations');
                     }
 
                     const result = await response.json();
@@ -410,7 +429,7 @@
                                     `).join('')}
                                 </div>
                                 <div class="assessment-score">
-                                    <span>Similarity Score: ${assessment.similarity_score.toFixed(2)}</span>
+                                    <span>Similarity Score: ${assessment.similarity_score ? assessment.similarity_score.toFixed(2) : 'N/A'}</span>
                                 </div>
                             </div>
                         `).join('');
@@ -420,7 +439,7 @@
                     }
                 } catch (error) {
                     console.error('Error:', error);
-                    recommendationsContainer.innerHTML = '<p>Error getting recommendations. Please try again.</p>';
+                    recommendationsContainer.innerHTML = `<p class="error-message">Error: ${error.message}</p>`;
                 }
             });
         });
