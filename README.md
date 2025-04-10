@@ -181,5 +181,5 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 ---
 
 <div align="center">
-  <sub>Built with ❤️ by the SHL Team</sub>
+  <sub>Built with ❤️ by Abhishek sharma</sub>
 </div>
