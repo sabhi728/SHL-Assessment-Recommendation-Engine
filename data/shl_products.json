@@ -1,68 +1,372 @@
 {
-    "products": [
+    "assessments": [
         {
-            "id": "OPQ32",
-            "name": "Occupational Personality Questionnaire (OPQ32)",
-            "description": "A comprehensive personality assessment that measures 32 characteristics that influence work performance.",
-            "categories": ["Personality", "Leadership", "Management"],
-            "suitable_roles": ["Manager", "Executive", "Team Leader"],
-            "experience_levels": ["mid", "senior", "executive"]
+            "url": "https://www.shl.com/solutions/products/product-catalog/view/python-new/",
+            "adaptive_support": "No",
+            "description": "Multi-choice test that measures the knowledge of Python programming, databases, modules and library. For Mid-Prof",
+            "duration": 11,
+            "remote_support": "Yes",
+            "test_type": ["Knowledge & Skills", "Technical Skills"]
         },
         {
-            "id": "VERIFY",
-            "name": "Verify Cognitive Ability Tests",
-            "description": "A suite of aptitude tests measuring numerical, verbal, and logical reasoning abilities.",
-            "categories": ["Cognitive Ability", "Problem Solving"],
-            "suitable_roles": ["Analyst", "Software Engineer", "Consultant"],
-            "experience_levels": ["entry", "mid", "senior"]
+            "url": "https://www.shl.com/solutions/products/product-catalog/view/technology-professional-8-0-job-focused-assessment/",
+            "adaptive_support": "No",
+            "description": "The Technology Job Focused Assessment assesses key behavioral attributes required for success in fast-paced, rapid change environments.",
+            "duration": 16,
+            "remote_support": "Yes",
+            "test_type": ["Competencies", "Personality & Behaviour"]
         },
         {
-            "id": "MQ",
-            "name": "Motivation Questionnaire",
-            "description": "Assesses 18 dimensions of motivation to understand what drives and engages individuals at work.",
-            "categories": ["Motivation", "Engagement"],
-            "suitable_roles": ["Sales Manager", "HR Manager", "Customer Service"],
-            "experience_levels": ["mid", "senior"]
+            "url": "https://www.shl.com/solutions/products/product-catalog/view/ai-ml-assessment/",
+            "adaptive_support": "Yes",
+            "description": "Comprehensive assessment of AI and Machine Learning concepts, including neural networks, deep learning, and model evaluation techniques.",
+            "duration": 45,
+            "remote_support": "Yes",
+            "test_type": ["AI & ML", "Technical Skills"]
         },
         {
-            "id": "WAVE",
-            "name": "Wave Professional Styles",
-            "description": "Measures work styles, preferences, and motives across 36 dimensions.",
-            "categories": ["Work Style", "Personality", "Leadership"],
-            "suitable_roles": ["Professional", "Manager", "Executive"],
-            "experience_levels": ["mid", "senior", "executive"]
+            "url": "https://www.shl.com/solutions/products/product-catalog/view/api-development-assessment/",
+            "adaptive_support": "No",
+            "description": "Evaluates API design, development, and security best practices, including RESTful principles, authentication, and documentation standards.",
+            "duration": 30,
+            "remote_support": "Yes",
+            "test_type": ["API Development", "Security"]
         },
         {
-            "id": "SALESASSESS",
-            "name": "Sales Assessment",
-            "description": "Specifically designed to evaluate sales capabilities and potential.",
-            "categories": ["Sales", "Customer Focus"],
-            "suitable_roles": ["Sales Representative", "Account Manager", "Sales Director"],
-            "experience_levels": ["entry", "mid", "senior"]
+            "url": "https://www.shl.com/solutions/products/product-catalog/view/data-science-assessment/",
+            "adaptive_support": "Yes",
+            "description": "Tests knowledge in data analysis, statistical methods, and data visualization techniques using Python and R.",
+            "duration": 40,
+            "remote_support": "Yes",
+            "test_type": ["Data Science", "Analytics"]
         },
         {
-            "id": "CODING",
-            "name": "Coding Assessment",
-            "description": "Technical assessment for software development roles, measuring coding ability and problem-solving.",
-            "categories": ["Technical Skills", "Problem Solving"],
-            "suitable_roles": ["Software Engineer", "Developer", "Technical Lead"],
-            "experience_levels": ["entry", "mid", "senior"]
+            "url": "https://www.shl.com/solutions/products/product-catalog/view/cloud-computing-assessment/",
+            "adaptive_support": "No",
+            "description": "Evaluates understanding of cloud platforms (AWS, Azure, GCP), infrastructure as code, and cloud security best practices.",
+            "duration": 35,
+            "remote_support": "Yes",
+            "test_type": ["Cloud Computing", "DevOps"]
         },
         {
-            "id": "FINANCE",
-            "name": "Financial Acumen Assessment",
-            "description": "Evaluates understanding of financial concepts and decision-making abilities.",
-            "categories": ["Financial Skills", "Analysis"],
-            "suitable_roles": ["Financial Analyst", "Accountant", "Finance Manager"],
-            "experience_levels": ["entry", "mid", "senior"]
+            "url": "https://www.shl.com/solutions/products/product-catalog/view/nlp-assessment/",
+            "adaptive_support": "Yes",
+            "description": "Natural Language Processing assessment covering text processing, sentiment analysis, and language models.",
+            "duration": 25,
+            "remote_support": "Yes",
+            "test_type": ["NLP", "AI & ML"]
         },
         {
-            "id": "REMOTE",
-            "name": "Remote Working Assessment",
-            "description": "Assesses capabilities and working style suited for remote work environments.",
-            "categories": ["Work Style", "Communication"],
-            "suitable_roles": ["Remote Worker", "Virtual Team Leader"],
-            "experience_levels": ["entry", "mid", "senior"]
+            "url": "https://www.shl.com/solutions/products/product-catalog/view/computer-vision-assessment/",
+            "adaptive_support": "Yes",
+            "description": "Tests knowledge in image processing, object detection, and computer vision algorithms using popular frameworks.",
+            "duration": 30,
+            "remote_support": "Yes",
+            "test_type": ["Computer Vision", "AI & ML"]
+        },
+        {
+            "url": "https://www.shl.com/solutions/products/product-catalog/view/microservices-assessment/",
+            "adaptive_support": "No",
+            "description": "Evaluates understanding of microservices architecture, containerization, and orchestration tools like Docker and Kubernetes.",
+            "duration": 35,
+            "remote_support": "Yes",
+            "test_type": ["Microservices", "DevOps"]
+        },
+        {
+            "url": "https://www.shl.com/solutions/products/product-catalog/view/ai-ethics-assessment/",
+            "adaptive_support": "No",
+            "description": "Tests knowledge of ethical considerations in AI development, bias mitigation, and responsible AI practices.",
+            "duration": 20,
+            "remote_support": "Yes",
+            "test_type": ["AI Ethics", "Compliance"]
+        },
+        {
+            "url": "https://www.shl.com/solutions/products/product-catalog/view/mlops-assessment/",
+            "adaptive_support": "Yes",
+            "description": "Evaluates understanding of ML model deployment, monitoring, and maintenance in production environments.",
+            "duration": 30,
+            "remote_support": "Yes",
+            "test_type": ["MLOps", "DevOps"]
+        },
+        {
+            "url": "https://www.shl.com/solutions/products/product-catalog/view/ai-system-design/",
+            "adaptive_support": "No",
+            "description": "Tests ability to design scalable AI systems, including architecture decisions, data pipelines, and model serving.",
+            "duration": 45,
+            "remote_support": "Yes",
+            "test_type": ["System Design", "AI & ML"]
+        },
+        {
+            "url": "https://www.shl.com/solutions/products/product-catalog/view/api-security-assessment/",
+            "adaptive_support": "No",
+            "description": "Evaluates knowledge of API security best practices, including authentication, authorization, and threat mitigation.",
+            "duration": 25,
+            "remote_support": "Yes",
+            "test_type": ["API Security", "Security"]
+        },
+        {
+            "url": "https://www.shl.com/solutions/products/product-catalog/view/ai-testing-assessment/",
+            "adaptive_support": "Yes",
+            "description": "Tests understanding of testing methodologies for AI systems, including model validation and performance testing.",
+            "duration": 30,
+            "remote_support": "Yes",
+            "test_type": ["Testing", "AI & ML"]
+        },
+        {
+            "url": "https://www.shl.com/solutions/products/product-catalog/view/ai-product-management/",
+            "adaptive_support": "No",
+            "description": "Evaluates ability to manage AI product development, including requirements gathering, stakeholder management, and roadmap planning.",
+            "duration": 35,
+            "remote_support": "Yes",
+            "test_type": ["Product Management", "AI & ML"]
+        },
+        {
+            "url": "https://www.shl.com/solutions/products/product-catalog/view/verify-ability-tests/",
+            "adaptive_support": "Yes",
+            "description": "Verify Ability Tests measure cognitive ability and provide insight into a candidate's potential to learn and adapt to new situations.",
+            "duration": 30,
+            "remote_support": "Yes",
+            "test_type": ["Cognitive Ability"]
+        },
+        {
+            "url": "https://www.shl.com/solutions/products/product-catalog/view/verify-interactive/",
+            "adaptive_support": "Yes",
+            "description": "Verify Interactive is a game-based assessment that measures cognitive ability and personality traits in an engaging format.",
+            "duration": 20,
+            "remote_support": "Yes",
+            "test_type": ["Cognitive Ability", "Personality & Behaviour"]
+        },
+        {
+            "url": "https://www.shl.com/solutions/products/product-catalog/view/verify-g+test/",
+            "adaptive_support": "No",
+            "description": "Verify G+ is a general ability test that measures verbal, numerical, and abstract reasoning skills.",
+            "duration": 45,
+            "remote_support": "Yes",
+            "test_type": ["Cognitive Ability"]
+        },
+        {
+            "url": "https://www.shl.com/solutions/products/product-catalog/view/verify-numerical-reasoning/",
+            "adaptive_support": "No",
+            "description": "Verify Numerical Reasoning test measures the ability to work with numerical information and make sound decisions.",
+            "duration": 25,
+            "remote_support": "Yes",
+            "test_type": ["Cognitive Ability"]
+        },
+        {
+            "url": "https://www.shl.com/solutions/products/product-catalog/view/verify-verbal-reasoning/",
+            "adaptive_support": "No",
+            "description": "Verify Verbal Reasoning test measures the ability to understand and evaluate written information.",
+            "duration": 25,
+            "remote_support": "Yes",
+            "test_type": ["Cognitive Ability"]
+        },
+        {
+            "url": "https://www.shl.com/solutions/products/product-catalog/view/verify-inductive-reasoning/",
+            "adaptive_support": "No",
+            "description": "Verify Inductive Reasoning test measures the ability to identify patterns and solve problems.",
+            "duration": 25,
+            "remote_support": "Yes",
+            "test_type": ["Cognitive Ability"]
+        },
+        {
+            "url": "https://www.shl.com/solutions/products/product-catalog/view/verify-mechanical-reasoning/",
+            "adaptive_support": "No",
+            "description": "Verify Mechanical Reasoning test measures the ability to understand mechanical concepts and principles.",
+            "duration": 25,
+            "remote_support": "Yes",
+            "test_type": ["Cognitive Ability"]
+        },
+        {
+            "url": "https://www.shl.com/solutions/products/product-catalog/view/verify-spatial-reasoning/",
+            "adaptive_support": "No",
+            "description": "Verify Spatial Reasoning test measures the ability to visualize and manipulate objects in space.",
+            "duration": 25,
+            "remote_support": "Yes",
+            "test_type": ["Cognitive Ability"]
+        },
+        {
+            "url": "https://www.shl.com/solutions/products/product-catalog/view/ai-ml-advanced/",
+            "adaptive_support": "Yes",
+            "description": "Advanced assessment covering deep learning architectures, reinforcement learning, and advanced ML algorithms. Includes practical implementation scenarios.",
+            "duration": 60,
+            "remote_support": "Yes",
+            "test_type": ["AI & ML", "Advanced Skills"]
+        },
+        {
+            "url": "https://www.shl.com/solutions/products/product-catalog/view/api-performance/",
+            "adaptive_support": "No",
+            "description": "Evaluates API performance optimization, caching strategies, and load balancing techniques for high-traffic applications.",
+            "duration": 45,
+            "remote_support": "Yes",
+            "test_type": ["API Development", "Performance"]
+        },
+        {
+            "url": "https://www.shl.com/solutions/products/product-catalog/view/data-engineering/",
+            "adaptive_support": "Yes",
+            "description": "Tests knowledge in data pipeline development, ETL processes, and big data technologies like Spark and Hadoop.",
+            "duration": 50,
+            "remote_support": "No",
+            "test_type": ["Data Engineering", "Big Data"]
+        },
+        {
+            "url": "https://www.shl.com/solutions/products/product-catalog/view/cloud-architecture/",
+            "adaptive_support": "No",
+            "description": "Evaluates cloud architecture design patterns, cost optimization, and multi-cloud strategies.",
+            "duration": 40,
+            "remote_support": "Yes",
+            "test_type": ["Cloud Computing", "Architecture"]
+        },
+        {
+            "url": "https://www.shl.com/solutions/products/product-catalog/view/ci-cd-pipeline/",
+            "adaptive_support": "Yes",
+            "description": "Tests understanding of continuous integration and deployment pipelines, including automated testing and deployment strategies.",
+            "duration": 35,
+            "remote_support": "No",
+            "test_type": ["DevOps", "CI/CD"]
+        },
+        {
+            "url": "https://www.shl.com/solutions/products/product-catalog/view/security-penetration/",
+            "adaptive_support": "No",
+            "description": "Evaluates knowledge of penetration testing methodologies, vulnerability assessment, and security testing tools.",
+            "duration": 55,
+            "remote_support": "Yes",
+            "test_type": ["Security", "Penetration Testing"]
+        },
+        {
+            "url": "https://www.shl.com/solutions/products/product-catalog/view/ai-ethics-advanced/",
+            "adaptive_support": "Yes",
+            "description": "Advanced assessment of AI ethics, including bias detection, fairness metrics, and ethical decision-making frameworks.",
+            "duration": 30,
+            "remote_support": "No",
+            "test_type": ["AI Ethics", "Compliance"]
+        },
+        {
+            "url": "https://www.shl.com/solutions/products/product-catalog/view/api-gateway/",
+            "adaptive_support": "No",
+            "description": "Tests knowledge of API gateway implementation, rate limiting, and API versioning strategies.",
+            "duration": 25,
+            "remote_support": "Yes",
+            "test_type": ["API Development", "Architecture"]
+        },
+        {
+            "url": "https://www.shl.com/solutions/products/product-catalog/view/software-engineering/",
+            "adaptive_support": "Yes",
+            "description": "Comprehensive assessment of software engineering principles, design patterns, and best practices.",
+            "duration": 45,
+            "remote_support": "Yes",
+            "test_type": ["Knowledge & Skills", "Technical Skills"]
+        },
+        {
+            "url": "https://www.shl.com/solutions/products/product-catalog/view/full-stack-development/",
+            "adaptive_support": "No",
+            "description": "Evaluates full-stack development skills including frontend, backend, and database technologies.",
+            "duration": 50,
+            "remote_support": "Yes",
+            "test_type": ["Knowledge & Skills", "Technical Skills"]
+        },
+        {
+            "url": "https://www.shl.com/solutions/products/product-catalog/view/mobile-development/",
+            "adaptive_support": "Yes",
+            "description": "Tests mobile app development skills including native and cross-platform development approaches.",
+            "duration": 35,
+            "remote_support": "Yes",
+            "test_type": ["Knowledge & Skills", "Technical Skills"]
+        },
+        {
+            "url": "https://www.shl.com/solutions/products/product-catalog/view/quality-assurance/",
+            "adaptive_support": "No",
+            "description": "Evaluates software testing methodologies, quality assurance processes, and test automation skills.",
+            "duration": 30,
+            "remote_support": "Yes",
+            "test_type": ["Knowledge & Skills", "Testing"]
+        },
+        {
+            "url": "https://www.shl.com/solutions/products/product-catalog/view/project-management/",
+            "adaptive_support": "Yes",
+            "description": "Tests project management skills including planning, risk management, and stakeholder communication.",
+            "duration": 40,
+            "remote_support": "Yes",
+            "test_type": ["Competencies", "Personality & Behaviour"]
+        },
+        {
+            "url": "https://www.shl.com/solutions/products/product-catalog/view/leadership-assessment/",
+            "adaptive_support": "No",
+            "description": "Evaluates leadership capabilities, decision-making skills, and team management abilities.",
+            "duration": 45,
+            "remote_support": "Yes",
+            "test_type": ["Competencies", "Personality & Behaviour"]
+        },
+        {
+            "url": "https://www.shl.com/solutions/products/product-catalog/view/communication-skills/",
+            "adaptive_support": "Yes",
+            "description": "Tests verbal and written communication skills, presentation abilities, and interpersonal effectiveness.",
+            "duration": 25,
+            "remote_support": "Yes",
+            "test_type": ["Competencies", "Personality & Behaviour"]
+        },
+        {
+            "url": "https://www.shl.com/solutions/products/product-catalog/view/problem-solving/",
+            "adaptive_support": "No",
+            "description": "Evaluates analytical thinking, problem-solving approaches, and decision-making capabilities.",
+            "duration": 30,
+            "remote_support": "Yes",
+            "test_type": ["Competencies", "Cognitive Ability"]
+        },
+        {
+            "url": "https://www.shl.com/solutions/products/product-catalog/view/team-collaboration/",
+            "adaptive_support": "Yes",
+            "description": "Tests ability to work effectively in teams, resolve conflicts, and contribute to group success.",
+            "duration": 35,
+            "remote_support": "Yes",
+            "test_type": ["Competencies", "Personality & Behaviour"]
+        },
+        {
+            "url": "https://www.shl.com/solutions/products/product-catalog/view/innovation-assessment/",
+            "adaptive_support": "No",
+            "description": "Evaluates creative thinking, innovation capabilities, and ability to generate novel solutions.",
+            "duration": 40,
+            "remote_support": "Yes",
+            "test_type": ["Competencies", "Cognitive Ability"]
+        },
+        {
+            "url": "https://www.shl.com/solutions/products/product-catalog/view/emotional-intelligence/",
+            "adaptive_support": "Yes",
+            "description": "Tests emotional intelligence, self-awareness, and ability to manage interpersonal relationships.",
+            "duration": 30,
+            "remote_support": "Yes",
+            "test_type": ["Personality & Behaviour", "Competencies"]
+        },
+        {
+            "url": "https://www.shl.com/solutions/products/product-catalog/view/resilience-assessment/",
+            "adaptive_support": "No",
+            "description": "Evaluates stress management, adaptability, and ability to maintain performance under pressure.",
+            "duration": 25,
+            "remote_support": "Yes",
+            "test_type": ["Personality & Behaviour", "Competencies"]
+        },
+        {
+            "url": "https://www.shl.com/solutions/products/product-catalog/view/ethical-decision-making/",
+            "adaptive_support": "Yes",
+            "description": "Tests ability to make ethical decisions, consider multiple perspectives, and maintain professional integrity.",
+            "duration": 35,
+            "remote_support": "Yes",
+            "test_type": ["Personality & Behaviour", "Competencies"]
+        },
+        {
+            "url": "https://www.shl.com/solutions/products/product-catalog/view/cultural-intelligence/",
+            "adaptive_support": "No",
+            "description": "Evaluates cultural awareness, adaptability, and ability to work effectively in diverse environments.",
+            "duration": 30,
+            "remote_support": "Yes",
+            "test_type": ["Personality & Behaviour", "Competencies"]
+        },
+        {
+            "url": "https://www.shl.com/solutions/products/product-catalog/view/change-management/",
+            "adaptive_support": "Yes",
+            "description": "Tests ability to manage change, adapt to new situations, and lead organizational transformation.",
+            "duration": 40,
+            "remote_support": "Yes",
+            "test_type": ["Personality & Behaviour", "Competencies"]
         }
     ]
 } 

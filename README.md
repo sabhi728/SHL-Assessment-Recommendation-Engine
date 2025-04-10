@@ -204,6 +204,73 @@ shl-recommendation-engine/
 
 For detailed API documentation, visit: `http://localhost:8000/docs`
 
+## 📊 Evaluation Metrics
+
+The system's performance is evaluated using two key metrics:
+
+### 1. Mean Recall@K
+This metric measures how many of the relevant assessments were retrieved in the top K recommendations, averaged across all test queries.
+
+```
+𝑅𝑒𝑐𝑎𝑙𝑙@𝐾 = Number of relevant assessments in top K / Total relevant assessments for the query
+𝑀𝑒𝑎𝑛𝑅𝑒𝑐𝑎𝑙𝑙@𝐾 = (1/𝑁) * ∑𝑅𝑒𝑐𝑎𝑙𝑙@𝐾𝑖
+where N is the total number of test queries.
+```
+
+### 2. Mean Average Precision @K (MAP@K)
+MAP@K evaluates both the relevance and ranking order of retrieved assessments by calculating Precision@k at each relevant result and averaging it over all queries.
+
+```
+𝐴𝑃@𝐾 = (1/min(𝐾, 𝑅)) * ∑𝑃(𝑘) * 𝑟𝑒𝑙(𝑘)
+𝑀𝐴𝑃@𝐾 = (1/𝑁) * ∑𝐴𝑃@𝐾𝑖
+where:
+- R = total relevant assessments for the query
+- P(k) = precision at position k
+- rel(k) = 1 if the result at position k is relevant, otherwise 0
+- N = total number of test queries
+```
+
+## 🧪 Test Cases
+
+The system is tested against the following real-world scenarios:
+
+1. **Java Developer Query**
+   ```
+   "I am hiring for Java developers who can also collaborate effectively with my business teams. Looking for an assessment(s) that can be completed in 40 minutes."
+   ```
+
+2. **Python/SQL/JS Query**
+   ```
+   "Looking to hire mid-level professionals who are proficient in Python, SQL and Java Script. Need an assessment package that can test all skills with max duration of 60 minutes."
+   ```
+
+3. **JD Screening Query**
+   ```
+   "Here is a JD text, can you recommend some assessment that can help me screen applications. Time limit is less than 30 minutes."
+   ```
+
+4. **Analyst Cognitive Query**
+   ```
+   "I am hiring for an analyst and wants applications to screen using Cognitive and personality tests, what options are available within 45 min"
+   ```
+
+### Running Tests
+To run the evaluation tests:
+```bash
+python test_api.py
+```
+
+The test script will:
+1. Execute each test case
+2. Calculate Recall@10 and MAP@10 metrics
+3. Display detailed results including:
+   - Recommended assessments
+   - Duration
+   - Adaptive/Remote support
+   - Test types
+   - Similarity scores
+   - Evaluation metrics
+
 ---
 
 <div align="center">

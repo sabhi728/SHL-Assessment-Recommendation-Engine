@@ -22,8 +22,8 @@ wheels/
 
 # Virtual Environment
 venv/
-env/
 ENV/
+env/
 
 # IDE
 .idea/
@@ -38,4 +38,5 @@ ENV/
 *.log
 
 # Local development
-.DS_Store 
+.DS_Store
+Thumbs.db 

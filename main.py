@@ -1,20 +1,21 @@
 from fastapi import FastAPI, HTTPException, Request
+from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from typing import List, Optional
-import numpy as np
+from typing import List, Dict, Any
 import json
+import logging
+from sentence_transformers import SentenceTransformer
+import numpy as np
 from pathlib import Path
 import os
 from dotenv import load_dotenv
-import logging
 import traceback
 
 # Configure logging
 logging.basicConfig(
-    level=logging.DEBUG,
+    level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
 logger = logging.getLogger(__name__)
@@ -22,208 +23,123 @@ logger = logging.getLogger(__name__)
 # Load environment variables
 load_dotenv()
 
-# Get environment variables with defaults
-ENVIRONMENT = os.getenv("ENVIRONMENT", "production")
-PORT = int(os.getenv("PORT", "10000"))
-HOST = "0.0.0.0"
-
-# Create FastAPI app
+# Initialize FastAPI app
 app = FastAPI(
     title="SHL Assessment Recommendation Engine",
-    docs_url="/docs" if ENVIRONMENT == "development" else None,
-    redoc_url="/redoc" if ENVIRONMENT == "development" else None
+    description="API for recommending SHL assessments based on job descriptions and filters",
+    version="1.0.0"
 )
 
-# Configure CORS with more detailed settings
-origins = [
-    "http://localhost",
-    "http://localhost:8000",
-    "http://127.0.0.1",
-    "http://127.0.0.1:8000",
-    "https://*.onrender.com",  # Allow Render deployments
-    "*"  # Allow all origins for testing
-]
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-# Ensure static and templates directories exist
-Path("static").mkdir(exist_ok=True)
-Path("templates").mkdir(exist_ok=True)
-
-# Mount static files
+# Mount static files and templates
 app.mount("/static", StaticFiles(directory="static"), name="static")
-
-# Templates
 templates = Jinja2Templates(directory="templates")
 
-# Ensure data and models directories exist
-Path("data").mkdir(exist_ok=True)
-Path("models").mkdir(exist_ok=True)
-
+# Load the sentence transformer model
 try:
-    # Load model configuration
-    with open("models/config.json") as f:
-        MODEL_CONFIG = json.load(f)
-        logger.debug(f"Model config loaded: {MODEL_CONFIG}")
-
-    # Load SHL product catalog
-    with open("data/shl_products.json") as f:
-        data = json.load(f)
-        PRODUCTS = data["products"]
-        logger.debug(f"Loaded {len(PRODUCTS)} products")
+    model = SentenceTransformer('all-MiniLM-L6-v2')
+    logger.info("Sentence transformer model loaded successfully")
 except Exception as e:
-    logger.error(f"Error loading configuration files: {str(e)}")
-    logger.error(f"Traceback: {traceback.format_exc()}")
-    MODEL_CONFIG = {
-        "model_settings": {
-            "transformer_model": "sentence-transformers/all-MiniLM-L6-v2",
-            "max_sequence_length": 128,
-            "weights": {
-                "semantic_similarity": 0.4,
-                "role_match": 0.3,
-                "category_match": 0.3
-            }
-        },
-        "role_matching": {
-            "exact_match_score": 1.0,
-            "partial_match_score": 0.5,
-            "no_match_score": 0.0
-        },
-        "category_matching": {
-            "min_categories_match": 1,
-            "boost_multiple_matches": True
-        }
-    }
-    PRODUCTS = []
+    logger.error(f"Error loading sentence transformer model: {str(e)}")
+    raise
 
-# Add server configuration
-SERVER_CONFIG = {
-    "host": HOST,
-    "port": PORT,
-    "reload": ENVIRONMENT == "development",
-    "workers": 1,
-    "log_level": "info"
-}
+# Load assessments data
+def load_assessments():
+    try:
+        with open("data/shl_products.json", "r") as f:
+            data = json.load(f)
+            assessments = data.get("assessments", [])
+            logger.info(f"Loaded {len(assessments)} assessments successfully")
+            return assessments
+    except FileNotFoundError:
+        logger.error("Assessment data file not found")
+        return []
+    except json.JSONDecodeError:
+        logger.error("Invalid JSON format in assessment data file")
+        return []
+    except Exception as e:
+        logger.error(f"Error loading assessments: {str(e)}")
+        return []
+
+assessments = load_assessments()
 
 class RecommendationRequest(BaseModel):
-    job_role: str
-    assessment_needs: List[str]
-    experience_level: Optional[str] = None
+    query: str
+
+class Assessment(BaseModel):
+    url: str
+    adaptive_support: str
+    description: str
+    duration: int
+    remote_support: str
+    test_type: List[str]
 
 class RecommendationResponse(BaseModel):
-    recommended_products: List[dict]
-    confidence_scores: List[float]
+    recommended_assessments: List[Assessment]
 
-@app.get("/")
-async def home(request: Request):
+def calculate_similarity(query: str, description: str) -> float:
+    """Calculate similarity score between query and description"""
+    try:
+        query_embedding = model.encode(query)
+        description_embedding = model.encode(description)
+        similarity = float(np.dot(query_embedding, description_embedding))
+        logger.debug(f"Similarity score calculated: {similarity}")
+        return similarity
+    except Exception as e:
+        logger.error(f"Error calculating similarity: {str(e)}")
+        return 0.0
+
+def get_recommendations(query: str) -> List[Dict]:
+    """Get recommendations based on query"""
+    try:
+        # Calculate similarity scores for all assessments
+        scored_assessments = []
+        for assessment in assessments:
+            # Calculate similarity score
+            similarity_score = calculate_similarity(query, assessment["description"])
+            
+            scored_assessments.append({
+                **assessment,
+                "similarity_score": similarity_score
+            })
+        
+        # Sort by score and return top 10
+        scored_assessments.sort(key=lambda x: x["similarity_score"], reverse=True)
+        top_assessments = scored_assessments[:10]
+        logger.info(f"Returning {len(top_assessments)} top recommendations")
+        return top_assessments
+    
+    except Exception as e:
+        logger.error(f"Error getting recommendations: {str(e)}")
+        logger.error(traceback.format_exc())
+        return []
+
+@app.get("/", response_class=HTMLResponse)
+async def read_root(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
 @app.get("/health")
 async def health_check():
     return {
-        "status": "healthy",
-        "products_loaded": len(PRODUCTS) > 0,
-        "config_loaded": MODEL_CONFIG is not None
+        "status": "healthy"
     }
 
-@app.get("/products")
-async def get_products():
-    return PRODUCTS
-
-@app.post("/recommend")
+@app.post("/recommend", response_model=RecommendationResponse)
 async def recommend(request: RecommendationRequest):
     try:
-        logger.debug(f"Received recommendation request: {request}")
+        logger.info(f"Received recommendation request with query: {request.query[:50]}...")
         
-        # Convert input to lowercase for case-insensitive matching
-        job_role = request.job_role.lower()
-        assessment_needs = [need.lower() for need in request.assessment_needs if need]  # Filter out empty strings
-        experience_level = request.experience_level.lower() if request.experience_level else None
-
-        logger.debug(f"Processed request - job_role: {job_role}, needs: {assessment_needs}, level: {experience_level}")
-
-        recommended = []
-        confidence_scores = []
-
-        for product in PRODUCTS:
-            score = 0.0
-            matches = 0
-
-            # Check role match
-            product_roles = [role.lower() for role in product["suitable_roles"]]
-            if any(role in job_role for role in product_roles) or any(job_role in role for role in product_roles):
-                score += 0.4
-                matches += 1
-                logger.debug(f"Role match found for product {product['name']}")
-
-            # Check category match
-            product_categories = [cat.lower() for cat in product["categories"]]
-            category_matches = sum(1 for need in assessment_needs if any(cat in need.lower() or need.lower() in cat for cat in product_categories))
-            if category_matches > 0:
-                score += 0.3 * (category_matches / len(assessment_needs))
-                matches += 1
-                logger.debug(f"Category match found for product {product['name']}")
-
-            # Check experience level match if provided
-            if experience_level and "experience_levels" in product:
-                if experience_level in product["experience_levels"]:
-                    score += 0.3
-                    matches += 1
-                    logger.debug(f"Experience level match found for product {product['name']}")
-
-            # Only include products with at least one match
-            if matches > 0:
-                recommended.append(product)
-                confidence_scores.append(score)
-                logger.debug(f"Added product {product['name']} with score {score}")
-
-        # Sort by confidence score
-        sorted_indices = np.argsort(confidence_scores)[::-1]
-        recommended = [recommended[i] for i in sorted_indices]
-        confidence_scores = [confidence_scores[i] for i in sorted_indices]
-
-        logger.debug(f"Returning {len(recommended)} recommendations")
-        return RecommendationResponse(
-            recommended_products=recommended,
-            confidence_scores=confidence_scores
-        )
-
+        recommendations = get_recommendations(request.query)
+        logger.info(f"Returning {len(recommendations)} recommendations")
+        
+        if not recommendations:
+            raise HTTPException(status_code=404, detail="No recommendations found")
+        
+        return RecommendationResponse(recommended_assessments=recommendations)
     except Exception as e:
-        logger.error(f"Error in recommendation: {str(e)}")
-        logger.error(f"Traceback: {traceback.format_exc()}")
+        logger.error(f"Error in recommendation endpoint: {str(e)}")
+        logger.error(traceback.format_exc())
         raise HTTPException(status_code=500, detail=str(e))
-
-@app.get("/test")
-async def test(request: Request):
-    return templates.TemplateResponse("test.html", {"request": request})
-
-@app.get("/api/test")
-async def api_test():
-    return {"status": "ok", "message": "API is working"}
 
 if __name__ == "__main__":
     import uvicorn
-    try:
-        logger.info(f"Starting server in {ENVIRONMENT} mode")
-        logger.info(f"Server will run on {HOST}:{PORT}")
-        logger.info(f"Products loaded: {len(PRODUCTS)}")
-        logger.info(f"Model config loaded: {MODEL_CONFIG is not None}")
-        
-        uvicorn.run(
-            app,
-            host=HOST,
-            port=PORT,
-            reload=SERVER_CONFIG["reload"],
-            workers=SERVER_CONFIG["workers"],
-            log_level=SERVER_CONFIG["log_level"]
-        )
-    except Exception as e:
-        logger.error(f"Failed to start server: {str(e)}")
-        logger.error(f"Traceback: {traceback.format_exc()}")
-        raise 
+    uvicorn.run(app, host="0.0.0.0", port=8000) 
