@@ -14,6 +14,7 @@ import os
 from dotenv import load_dotenv
 import traceback
 import sys
+import time
 
 # Configure logging
 logging.basicConfig(
@@ -55,12 +56,14 @@ async def startup_event():
     global model, assessments
     try:
         # Load the sentence transformer model
+        start_time = time.time()
         model = SentenceTransformer('all-MiniLM-L6-v2')
-        logger.info("Sentence transformer model loaded successfully")
+        logger.info(f"Sentence transformer model loaded successfully in {time.time() - start_time:.2f} seconds")
         
         # Load assessments data
+        start_time = time.time()
         assessments = load_assessments()
-        logger.info(f"Loaded {len(assessments)} assessments successfully")
+        logger.info(f"Loaded {len(assessments)} assessments successfully in {time.time() - start_time:.2f} seconds")
     except Exception as e:
         logger.error(f"Error during startup: {str(e)}")
         logger.error(traceback.format_exc())
@@ -172,46 +175,60 @@ def get_recommendations(query: str, filters: Optional[Filters] = None) -> List[D
 async def read_root(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
-@app.get("/health")
-async def health_check():
+@app.post("/recommend")
+async def get_recommendations(request: Request):
     try:
-        return {
-            "status": "healthy",
-            "assessments_loaded": len(assessments) > 0,
-            "model_loaded": model is not None,
-            "environment": os.getenv("ENVIRONMENT", "production")
-        }
-    except Exception as e:
-        logger.error(f"Health check failed: {str(e)}")
-        return {
-            "status": "unhealthy",
-            "error": str(e)
-        }
+        # Parse request body
+        body = await request.json()
+        query = body.get("query", "")
+        filters = body.get("filters", {})
 
-@app.post("/recommend", response_model=RecommendationResponse)
-async def recommend(request: RecommendationRequest):
-    try:
-        if not request.query or not request.query.strip():
-            raise HTTPException(status_code=400, detail="Query cannot be empty")
-            
-        logger.info(f"Received recommendation request with query: {request.query[:50]}...")
-        logger.info(f"Filters: {request.filters}")
+        if not query:
+            return JSONResponse(
+                status_code=400,
+                content={"error": "Query parameter is required"}
+            )
+
+        # Get recommendations
+        recommendations = get_recommendations(query, filters)
         
-        recommendations = get_recommendations(request.query, request.filters)
-        logger.info(f"Returning {len(recommendations)} recommendations")
-        
-        if not recommendations:
-            raise HTTPException(status_code=404, detail="No recommendations found matching your criteria")
-        
-        return RecommendationResponse(recommended_assessments=recommendations)
-    except HTTPException:
-        raise
+        return JSONResponse(
+            content={"recommendations": recommendations},
+            status_code=200
+        )
+    except json.JSONDecodeError:
+        return JSONResponse(
+            status_code=400,
+            content={"error": "Invalid JSON in request body"}
+        )
     except Exception as e:
-        logger.error(f"Error in recommendation endpoint: {str(e)}")
+        logger.error(f"Error in /recommend endpoint: {str(e)}")
         logger.error(traceback.format_exc())
         return JSONResponse(
             status_code=500,
-            content={"detail": str(e)}
+            content={"error": "Internal server error", "details": str(e)}
+        )
+
+@app.get("/health")
+async def health_check():
+    try:
+        return JSONResponse(
+            content={
+                "status": "healthy",
+                "assessments_loaded": len(assessments) > 0,
+                "model_loaded": model is not None,
+                "environment": os.getenv("ENVIRONMENT", "production")
+            },
+            status_code=200
+        )
+    except Exception as e:
+        logger.error(f"Health check failed: {str(e)}")
+        return JSONResponse(
+            status_code=500,
+            content={
+                "status": "unhealthy",
+                "error": str(e)
+            }
         )
 
 if __name__ == "__main__":
