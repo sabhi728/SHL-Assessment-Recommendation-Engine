@@ -5,7 +5,7 @@ services:
     buildCommand: |
       pip install -r requirements.txt
       python -c "import nltk; nltk.download('punkt')"
-    startCommand: gunicorn main:app --workers 2 --timeout 120 --bind 0.0.0.0:$PORT --worker-class uvicorn.workers.UvicornWorker --log-level info
+    startCommand: gunicorn main:app --workers 4 --timeout 120 --bind 0.0.0.0:$PORT
     healthCheckPath: /health
     autoDeploy: true
     envVars:
@@ -22,12 +22,4 @@ services:
       - key: SHL_API_KEY
         sync: false
       - key: SHL_API_BASE_URL
-        value: https://api.shl.com/v1
-    plan: starter
-    scaling:
-      minInstances: 1
-      maxInstances: 1
-    disk:
-      name: data
-      mountPath: /data
-      sizeGB: 1 
+        value: https://api.shl.com/v1 
